@@ -46,3 +46,68 @@ var isSymmetric = function(root) {
     return isEqualTree(reverseLeft, root.right)
   }
 };
+/**
+ * 思路二：广度优先遍历
+ * 先广度优先遍历，然后对每行的结果进行检测是否对称
+ * 虽然做出来了，但效率奇低ORZ
+ */
+var levelOrder = function(root = null, result = [], layer = 0, count = 0) {
+  if (!root) {
+    return result
+  }
+  if (!result[layer]) {
+    result[layer] = []
+  }
+  result[layer][count] = root.val
+  
+  levelOrder(root.left, result, layer+1, count * 2)
+  levelOrder(root.right, result, layer+1, count * 2 + 1)
+  return result
+};
+/**
+ * @param {TreeNode} root
+ * @return {boolean}
+ */
+var isSymmetric = function(root) {
+  if (!root) return true
+  else if (root.left && !root.right) {
+    return false
+  } else if (!root.left && root.right) {
+    return false
+  } else {
+    const res = levelOrder(root)
+    for(let i = 1, count = 2; i < res.length; i++, count*=2) {
+      for(let j = 0; j < count/2; j++) {
+        if (res[i][j] !== res[i][count -1 - j]) {
+          return false
+        }
+      }
+    }
+    return true
+  }
+};
+/**
+ * 思路三：最小元递归
+ * 前序遍历改良版
+ * 一棵二叉树的最小元是数值+左右子树。以这个单位进行递归。
+ * 效率最高的解法，大佬的答案
+ */
+const help = function (left, right) {
+  if (left  === null && right ===null) {
+      return true;
+  }
+
+  if (left === null || right === null) {
+      return false
+  }
+
+  return left.val === right.val && help(left.left, right.right) && help(right.left, left.right)
+}
+var isSymmetric = function(root) {
+ if (root === null) {
+     return true;
+ }
+
+ return help(root.left, root.right )
+
+};
