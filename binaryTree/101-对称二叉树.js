@@ -111,3 +111,23 @@ var isSymmetric = function(root) {
  return help(root.left, root.right )
 
 };
+/**
+ * 思路四： 非递归方法
+ * 手动实现堆栈，模拟递归过程
+ * 效率似乎并不好
+ * 思考方式是思考递归的话，下层会怎么执行，什么时候到底反弹，我也做类似的事情就可以了
+ * 虽然代码不多但想了我好一段事件
+ */
+var isSymmetric = function(root) {
+  if (!root) return true
+  let wait = [[root.left, root.right]]
+  while (wait.length) {
+    console.log(wait)
+    const [left, right] = wait.pop()
+    if (left && !right || !left && right) return false
+    if (left === right && !left) continue
+    if (left.val !== right.val) return false
+    wait.push([left.right, right.left], [left.left, right.right])
+  }
+  return true
+};
